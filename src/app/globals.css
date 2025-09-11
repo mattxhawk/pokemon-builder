@@ -12,10 +12,9 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components{
+  .tile{
+    @apply aspect-square flex items-center justify-center font-bold text-3xl border-2 border-white hover:cursor-pointer hover:shadow-lg shadow-white
   }
 }
 

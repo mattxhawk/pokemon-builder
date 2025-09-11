@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getPokeCardDetails, getPokemonList, devGetAllPokemonNames } from '@/app/lib/poke_api';
+import { getPokeCardDetails, getPokemonList } from '@/app/lib/poke_api';
 import PokeCard from '@/app/ui/components/pokecard';
 
 
@@ -25,7 +25,7 @@ export default async function Page({ params, }: { params: { page: string } }){
         <main className='flex flex-col items-center bg-[#1E1E2F] min-h-screen w-full p-6'>
             <h1 className='text-white text-5xl font-extrabold underline pb-4'>Pokedex Page {page}</h1>
             <PokeCard pokemonList={detailPokemonList}/>
-            <div className="flex justify-between px-6 mt-8 bg-slate-100">
+            <div className="flex justify-between rounded-lg px-6 mt-8 bg-slate-100">
                 {currentPage > 1 && (
                 <Link href={`/pokemon/page/${currentPage - 1}`} className="hover:underline p-2 rounded-2xl">
                     ← Previous

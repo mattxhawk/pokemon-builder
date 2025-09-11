@@ -13,6 +13,19 @@ export type StatEntry = {
   value: number
 }
 
+interface PokeStat {
+  base_stat: number;
+  stat: {
+    name: string;
+  };
+}
+
+interface type {
+  type:{
+    name: string;
+  }
+}
+
 export function devGetAllPokemonNames() {
   if (process.env.NODE_ENV === "development") {
     // Use local JSON cache in dev
@@ -32,7 +45,7 @@ export function devGetAllPokemonNames() {
   return data.results;
 }
 
-
+//Retrieve list of pokemon using 
 export async function getPokemonList(limit: number, offset: number){
     const res = await fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limit}`);
     if (!res.ok) {
@@ -43,35 +56,20 @@ export async function getPokemonList(limit: number, offset: number){
     return data.results;
 }
 
-export async function getPokemon(name:string) {
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-  if(!res.ok){
-    throw new Error("Failed to fetch Pokémon");
-  }
-  const data = res.json();
-  return data;
-  
-}
-
-export async function getPokeCardDetails(url: string): Promise<Pokemon | null>{
-    try {
-      const res = await fetch(url);
-      if (!res.ok) {
-        throw new Error(`Failed to fetch Pokémon details from ${url}`);
+//Get details of pokemon to display visuals and basic information
+export async function getPokeCardDetails(url: string): Promise<Pokemon>{
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch Pokémon details from ${url}`);
     }
     const data = await res.json();
     const id = data.id;
     const name = data.name;
     const imageURL = data.sprites.other['official-artwork'].front_default;
-    const types = data.types.map((t: any) => t.type.name);
+    const types = data.types.map((t: type) => t.type.name);
     const baseHp = data.stats[0].base_stat;
    
     return {name, imageURL, types, baseHp, id}
-
-  }catch(e){
-    console.warn("Skip Pokemon where fetch failed", url, e);
-    return null;
-  }
 }
 
 export async function getPokeStats(name: string){
@@ -80,7 +78,7 @@ export async function getPokeStats(name: string){
     throw new Error(`Failed to fetch Pokémon details form url`);
   }
   const data = await res.json();
-  const stats: StatEntry[] = data.stats.map((s: any) => ({
+  const stats: StatEntry[] = data.stats.map((s: PokeStat) => ({
     name: s.stat.name.charAt(0).toUpperCase() + s.stat.name.slice(1),
     value: s.base_stat
   }));
@@ -98,8 +96,12 @@ export type move = {
 }
 
 export type moveEntry ={
-  name: string,
-  url: string,
+  move:{
+    name: string,
+    url: string,
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  version_group_details: any[];
 }
 
 export async function getPokemonMoveSet(name: string): Promise<moveEntry[]>{
@@ -112,23 +114,34 @@ export async function getPokemonMoveSet(name: string): Promise<moveEntry[]>{
   return moves;
 }
 
+interface flavorEntry {
+  language: { name: string};
+  flavor_text: string; 
+}
+
+interface effectEntry {
+  effect: string;
+  language: { name: string };
+}
+
 export async function getMoveDetails(name: string): Promise<move>{
   const res = await fetch(`https://pokeapi.co/api/v2/move/${name}`);
-  const move = await res.json();
-
-  const moveName = move.name;
-  const type = move.type.name;
-  const accuracy = move.accuracy;
-  const power = move.power;
-  const pp = move.pp
+  if (!res.ok){
+    throw new Error("Failed to fetch move detail");
+  }
+  const moveData = await res.json();
+  const moveName = moveData.name;
+  const type = moveData.type.name;
+  const accuracy = moveData.accuracy;
+  const power = moveData.power;
+  const pp = moveData.pp;
+  const damageClass = moveData.damage_class.name;
   const effectString: string = 
-    move.effect_entries?.[0]?.effect ?? 
-    move.flavor_text_entries.find((entry: any) => entry.language.name === "en")?.flavor_text ??
+    moveData.effect_entries?.[0]?.effect ?? 
+    moveData.flavor_text_entries.find((entry: flavorEntry) => entry.language.name === "en")?.flavor_text ??
     "No description available"
-  
-  const damageClass = move.damage_class.name;
 
-  return {moveName, type, accuracy, power, pp, effectString, damageClass}
+  return { moveName, type, accuracy, power,  pp, effectString, damageClass };
 }
 
 export async function getAbilities(name: string){
@@ -149,8 +162,8 @@ export async function getAbilityDetails(name: string){
   const ability = await res.json();
   const abilityName = ability.name;
   const effectString: string = 
-    ability.effect_entries.find((entry: any) => entry.language.name === "en").effect ??
-    ability.flavor_text_entries.find((entry: any) => entry.language.name === "en")?.flavor_text ??
+    ability.effect_entries.find((entry: effectEntry) => entry.language.name === "en").effect ??
+    ability.flavor_text_entries.find((entry: flavorEntry) => entry.language.name === "en")?.flavor_text ??
     "No description available"
 
   return { abilityName, effectString };

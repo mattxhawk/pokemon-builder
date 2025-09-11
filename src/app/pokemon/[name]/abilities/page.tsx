@@ -1,4 +1,4 @@
-import { getAbilities, getAbilityDetails, getPokeCardDetails, Pokemon } from "@/src/app/lib/poke_api";
+import { getAbilities, getAbilityDetails, getPokeCardDetails } from "@/src/app/lib/poke_api";
 import PokeNavBar from "@/src/app/ui/components/detail_options_bar";
 import { getBoxShadow, getDisplayName, typeColorMapping } from "@/src/app/ui/styles/cardStyling";
 
@@ -6,18 +6,23 @@ type abilityEntry = {
     abilityName: string,
     effectString: string
 }
+interface ability{
+    ability:{
+        name: string;
+    }
+}
 
 export default async function AbilitiesPage({params,}: {params: {name: string}}){
     const { name } = await params;
     const abilities = await getAbilities(name);
     const abilityEntries: abilityEntry[] = await Promise.all(
-        abilities.map(async (ability: any) => await getAbilityDetails(ability.ability.name))
+        abilities.map(async (ability: ability) => await getAbilityDetails(ability.ability.name))
     );
     const pokemonDisplayName = getDisplayName(name);
     const pokemonDetails = await getPokeCardDetails(`https://pokeapi.co/api/v2/pokemon/${name}`);
     const pokemonTypeColor1 = typeColorMapping[pokemonDetails?.types[0] as keyof typeof typeColorMapping];
     const pokemonTypeColor2 = typeColorMapping[pokemonDetails?.types[1] as keyof typeof typeColorMapping] || "#FFF";
-    const boxShadow = getBoxShadow(pokemonDetails.types);
+    const boxShadow = getBoxShadow(pokemonDetails?.types ?? []);
 
 
 

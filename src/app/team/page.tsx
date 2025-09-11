@@ -4,7 +4,9 @@ import { getAllPokemonNames } from "../lib/poke_api";
 import { getDisplayName } from "../ui/styles/cardStyling";
 import Link from "next/link";
 
-
+interface pokemonEntry{
+    name: string
+}
 export default function Page(){
     const [pokemonList, setPokemonList] = useState<string[]>([]);
     const [currentInput, setCurrentInput] = useState("");
@@ -12,7 +14,7 @@ export default function Page(){
     useEffect(() =>{
         async function fetchPokemonNames() {
             const pokemonNames = await getAllPokemonNames();
-            const capitalizedList = pokemonNames.map((pokemon: any) => getDisplayName(pokemon.name));
+            const capitalizedList = pokemonNames.map((pokemon: pokemonEntry) => getDisplayName(pokemon.name));
             
             setPokemonList(capitalizedList);
 

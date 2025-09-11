@@ -1,4 +1,4 @@
-import { Pokemon, getPokeCardDetails, getPokeStats } from "@/app/lib/poke_api";
+import { getPokeCardDetails, getPokeStats } from "@/app/lib/poke_api";
 import StatChart from "@/app/ui/components/pokemon_stat_chart";
 import PokeNavBar from "@/app/ui/components/detail_options_bar";
 import { getBoxShadow, getDisplayName, getTypeIcons } from "@/app/ui/styles/cardStyling";
@@ -13,7 +13,7 @@ export default async function PokemonPage({
 
     const { name } = await params;
     const pokemonStats = await getPokeStats(name);
-    const pokemon: Pokemon = await getPokeCardDetails(`https://pokeapi.co/api/v2/pokemon/${name}`);
+    const pokemon = await getPokeCardDetails(`https://pokeapi.co/api/v2/pokemon/${name}`);
     const displayName = getDisplayName(pokemon.name);
 
     const boxShadow = getBoxShadow(pokemon.types);
@@ -41,7 +41,7 @@ export default async function PokemonPage({
                     ))}
                 </div>
                 <h1 className="font-bold text-2xl pt-2">{displayName}</h1>
-                <div className="p-6 border-5 border-black rounded-full">
+                <div className="p-3 border-5 border-black rounded-full">
                     <Image
                         width={150}
                         height={150}

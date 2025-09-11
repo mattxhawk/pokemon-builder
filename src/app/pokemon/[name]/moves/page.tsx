@@ -1,12 +1,12 @@
-import { getMoveDetails, getPokeCardDetails, getPokemonMoveSet, move, Pokemon } from "@/app/lib/poke_api";
+import { moveEntry, getMoveDetails, getPokemonMoveSet, move} from "@/app/lib/poke_api";
 import PokeNavBar from "@/app/ui/components/detail_options_bar";
 import { getDisplayName, typeColorMapping } from "@/app/ui/styles/cardStyling";
 
+
 export default async function MovesPage({params,}: {params:{name: string}}){
     const pokemonMoveSet = await getPokemonMoveSet(params.name);
-    const pokemonDetails = await getPokeCardDetails(`https://pokeapi.co/api/v2/pokemon/${params.name}`);
     const detailedMoveList: move[] = await Promise.all(
-        pokemonMoveSet.map( async (move: any)=> await getMoveDetails(move.move.name))
+        pokemonMoveSet.map( async (move: moveEntry)=> await getMoveDetails(move.move.name))
     );  
     const pokemonDisplayName = getDisplayName(params.name);
 

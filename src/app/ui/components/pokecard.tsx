@@ -21,9 +21,9 @@ export default function PokeCard({ pokemonList }: PokeCardProps){
                             alt={pokemon.name}
                             height={100}
                             width={100}
-                            className="pt-3"
+                            className="pt-3 mx-auto"
                         />
-                        <h1 className="pb-2 text-center break-words">{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h1>
+                        <h1 className="pb-2 text-center overflow-x-auto text-sm sm:text-sm">{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h1>
                     </Link>
                 )
             })}

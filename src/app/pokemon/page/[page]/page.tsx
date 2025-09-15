@@ -23,7 +23,7 @@ export default async function Page({ params, }: { params: { page: string } }){
 
     return(
         <main className='flex flex-col items-center bg-[#1E1E2F] min-h-screen w-full p-6'>
-            <h1 className='text-white text-5xl font-extrabold underline pb-4'>Pokedex Page {page}</h1>
+            <h1 className='text-white md:text-5xl text-3xl font-extrabold underline pb-4'>Pokedex Page {page}</h1>
             <PokeCard pokemonList={detailPokemonList}/>
             <div className="flex justify-between rounded-lg px-6 mt-8 bg-slate-100">
                 {currentPage > 1 && (

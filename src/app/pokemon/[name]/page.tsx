@@ -22,10 +22,11 @@ export default async function PokemonPage({
     return(
         <div className="flex flex-col h-screen w-full bg-neutral-900 items-center justify-center">
             <PokeNavBar name={name}/>
-            <div className="relative flex flex-col gap-3 items-center h-5/6 w-9/12 mb-10 bg-amber-50 border-2 border-black rounded-2xl"
+            <div className="relative flex flex-col items-center h-5/6 w-9/12 mb-10 bg-amber-50 border-2 border-black rounded-2xl"
                 style={{boxShadow}}
             >
-                <div className="absolute left-7 top-2 flex gap-4">
+                <h1 className="font-bold text-2xl pt-2">{displayName}</h1>
+                <div className="sm:absolute sm:left-5 sm:top-2 sm:flex-col flex gap-2">
                     {typeIconList.map((typeIcon: typeIcon)=>(
                         <Image
                         key={typeIcon.typeColor}
@@ -33,15 +34,14 @@ export default async function PokemonPage({
                         height={50}
                         src={typeIcon.url}
                         alt="Type Icon"
-                        className="rounded-full mt-4 p-2"
+                        className="rounded-full my-2 p-2"
                         style={{
                             backgroundColor: `${typeIcon.typeColor}`
                         }}
                         />
                     ))}
                 </div>
-                <h1 className="font-bold text-2xl pt-2">{displayName}</h1>
-                <div className="p-3 border-5 border-black rounded-full">
+                <div className="sm:p-3 p-2 border-5 border-black rounded-full">
                     <Image
                         width={150}
                         height={150}
